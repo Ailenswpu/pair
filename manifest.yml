@@ -1,0 +1,14 @@
+---
+applications:
+- name: pair
+  framework: rails3
+  runtime: ruby19
+  memory: 512M
+  instances: 1
+  url: pair-coding.${target-base}
+  path: .
+  services:
+    mysql-pair:
+      vendor: mysql
+      version: '5.1'
+      tier: free
