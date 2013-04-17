@@ -1,6 +1,7 @@
 <div id="content" class="text-center">
   <p class="text-info info">无需注册，输入邮箱直接进入！</p>
   <form action="/users" class="form-inline" method="post">
+    <%= form_authenticity_token %>
     <input id="email" style="height: 31px;margin-right: 10px;"  name="email" class="input-larage" type="email" placeholder="请输入邮箱">
     <button type="submit" class="btn btn-primary btn-large">点击进入</button>
   </form>
