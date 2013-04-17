@@ -6,6 +6,15 @@ class CodesController < ApplicationController
   # GET /codes.json
   def index
     @codes = Code.all
+
+  end
+
+  def save
+    if  Code.create(title: params[:title],code: params[:code],user_id: session[:user].id)
+      render json: "恭喜你保存代码成功"
+    else
+      render json: "保存代码失败"
+    end
   end
 
   def realtime
@@ -30,11 +39,6 @@ class CodesController < ApplicationController
   # GET /codes/new.json
   def new
     @code = Code.new
-    session[:url] = request.url.split('?')[1].split('=')[1].to_s
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @code }
-    end
   end
 
   # GET /codes/1/edit
@@ -46,16 +50,7 @@ class CodesController < ApplicationController
   # POST /codes.json
   def create
     @code = Code.new(params[:code])
-
-    respond_to do |format|
-      if @code.save
-        format.html { redirect_to @code, notice: 'Code was successfully created.' }
-        format.json { render json: @code, status: :created, location: @code }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @code.errors, status: :unprocessable_entity }
-      end
-    end
+    render json: params
   end
 
   # PUT /codes/1

@@ -1,11 +1,17 @@
 Pair::Application.routes.draw do
 
+  resources :users
+
+
+  get "home/index"
+
   resources :codes do
     collection do
       post 'realtime'
+      post 'save'
     end
   end
-  root :to => "codes#index"
+  root :to => "home#new"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

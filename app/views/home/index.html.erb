@@ -1,0 +1,80 @@
+<div class="main">
+  <div class="top_bar form-inline">
+    <%= select("theme","theme" , %w(选择编程语言)+Code::CODE_THEME) %>
+    <button id="btn-pair" onclick="TowTruck(this); return false;" class="btn btn-primary">开始结对编程</button>
+    <a id="listcode" href="#codeModal" role="button" class="btn" data-toggle="modal">查看保存的代码</a>
+    <a id="save" href="#myModal" role="button" class="btn" data-toggle="modal">保存代码</a>
+  </div>
+  <div class="code">
+    <div id="editor">#在这里编写代码</div>
+  </div>
+</div>
+
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="head">保存代码</h3>
+  </div>
+  <div class="modal-body">
+    <input id="title" style="height: 31px;width:505px;;margin-right: 10px;"  name="title" class="input-larage" type="text" placeholder="输入保存代码的标题">
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <button id="save-code" class="btn btn-primary">保存</button>
+  </div>
+</div>
+
+<div id="codeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="head">查看代码</h3>
+  </div>
+  <div class="modal-body">
+    <% unless @codes.nil?%>
+    <% @codes.each do |code|%>
+     <p><%= link_to code.title,home_index_path(id: code.id,look: true) %></p>
+     <% end %>
+     <% end %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+    <button id="save-code" class="btn btn-primary">保存</button>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+  $('.dropdown-toggle').dropdown();
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/ruby");
+    //Mode
+    $('#theme_theme').change(function() {
+    mode_name = $('option:selected', this).attr('value').toLowerCase();
+    editor.getSession().setMode("ace/mode/" + mode_name);
+    });
+    editor.getSession().on('change', function(e) {
+    localStorage.code = editor.getValue();
+    });
+    $("#title").bind("change paste keyup", function() {
+      localStorage.title = $(this).val();
+     });
+
+    $("#save-code").click(function() {
+        var  request  = $.ajax({
+         type: "POST",
+         beforeSend: function(xhr){
+                xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))
+            },
+          async : false,
+          url: "/codes/save",
+          dataType: "json",
+          data: { title: localStorage.title , code: localStorage.code }
+          });
+          alert(request.responseText);
+          editor.setValue("");
+          $("#title").val("");
+    });
+  });
+</script>

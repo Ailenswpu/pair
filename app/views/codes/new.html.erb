@@ -6,7 +6,7 @@
   <div id="code">(_2b || ! _2b).is_a? Question
   </div>
   <div id="sidebar">
-    <button onclick="TowTruck(this); return false;">Start TowTruck</button>
+    <button onclick="TowTruck(this); return false" class="btn btn-large btn-primary" id="btn-tryitout">Start TowTruck</button>
   <div id= "messages">
     <ul id="listmessage">
       <p class="text-error">
@@ -29,16 +29,16 @@
 //  editor.setReadOnly(true);
   editor.setTheme("ace/theme/monokai");
   editor.getSession().setMode("ace/mode/ruby");
-  // username =  '<%= session[:username] %>';
-  // $("#code").keyup(function(event) {
-  // //editor.getSession().on('change', function(e) {
-  // realtimecode = editor.getValue();
-  // client.publish('/codes/'+params, {code: realtimecode});
-  // });
-  // var subscription = client.subscribe('/codes/'+params, function(message) {
-  //    editor.setValue(message.code);
-  //    editor.clearSelection();
-  // });
+  username =  '<%= session[:username] %>';
+  $("#code").keyup(function(event) {
+  //editor.getSession().on('change', function(e) {
+  realtimecode = editor.getValue();
+  client.publish('/codes/'+params, {code: realtimecode});
+  });
+  var subscription = client.subscribe('/codes/'+params, function(message) {
+     editor.setValue(message.code);
+     editor.clearSelection();
+  });
 
   //Theme
   $('#theme_theme').change(function() {
@@ -47,19 +47,19 @@
   });
 
   //Send Message
-  // $('#send').click(function(){
-  // msg =  $('#message-text').val();
-  // client.publish('/newmessage'+params, { newmsg: msg, username: username });
-  // });
+  $('#send').click(function(){
+  msg =  $('#message-text').val();
+  client.publish('/newmessage'+params, { newmsg: msg, username: username });
+  });
 
-  // //websocket message
-  // client.subscribe('/newmessage'+params, function(message) {
-  //   var  htmlmessage   =  " <li> ";
-  //         htmlmessage += "<img id='avatar' src='/images/avatar.jpg'/>";
-  //         htmlmessage += message.username + " : " +  message.newmsg;
-  //         htmlmessage += "</li>";
-  //         $('#message-text').val("");
-  //         $('#listmessage').append(htmlmessage);
-  //   });
-  //     });
+  //websocket message
+  client.subscribe('/newmessage'+params, function(message) {
+    var  htmlmessage   =  " <li> ";
+          htmlmessage += "<img id='avatar' src='/images/avatar.jpg'/>";
+          htmlmessage += message.username + " : " +  message.newmsg;
+          htmlmessage += "</li>";
+          $('#message-text').val("");
+          $('#listmessage').append(htmlmessage);
+    });
+   });
 </script>
