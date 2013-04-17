@@ -26,7 +26,7 @@ end
 gem 'jquery-rails'
 
 group :production do
-gem 'cloudfoundry-jquery-rails'
+gem 'pg'
 end
 
 
